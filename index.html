@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#000000">
 <title>blin4k // Portfolio</title>
-<meta name="description" content="blin4k — личный сайт и портфолио. Простые сайты, калькулятор и тест.">
-<meta name="keywords" content="blin4k, портфолио, калькулятор, тест, программирование">
+<meta name="description" content="blin4k — личный сайт.">
+<meta name="keywords" content="blin4k, программирование">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -41,13 +41,7 @@ strong{color:#ffb0d4}
 .card{border:1px solid var(--line);border-radius:12px;padding:1.2rem 1.4rem;background:rgba(255,126,182,.05)}
 .card header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;font-family:"Pixelify Sans",monospace;font-weight:700;font-size:1.25rem;color:#ffb0d4}
 .tag{font:500 .72rem "JetBrains Mono",monospace;color:var(--lt);border:1px solid var(--p);border-radius:6px;padding:.15rem .55rem;background:rgba(255,126,182,.12)}
-.calc{width:min(280px,100%);margin-top:1rem;border:2px solid var(--line);border-radius:10px;overflow:hidden;background:#0f070e}
-.lbl{font-family:"Pixelify Sans",monospace;font-weight:700;font-size:1rem;color:var(--lt);padding:.55rem .8rem;border-bottom:1px solid var(--line);background:rgba(255,126,182,.08)}
-.calc output{display:block;text-align:right;font-size:1.6rem;padding:.8rem;min-height:3.4rem;overflow:hidden}
-.keys{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}
-.keys button{font:inherit;font-size:1.05rem;color:#f3dbe8;background:#180c16;border:0;padding:.8rem 0;cursor:pointer}
-.keys button:hover{background:rgba(255,126,182,.35)}
-.keys .op{color:var(--p)}
+.pix{display:block;width:min(300px,100%);height:auto;margin-top:1rem;border:2px solid var(--line);border-radius:10px}
 @media (max-width:600px){.bar{font-size:.95rem}.card header{flex-direction:column;align-items:flex-start;gap:.4rem}}
 </style>
 </head>
@@ -64,27 +58,12 @@ strong{color:#ffb0d4}
   <div class="bar"><span id="t"><b>&gt;</b>SYSTEM_INFO // BLIN4K</span><button class="x" id="close" aria-label="Закрыть">[ X ]</button></div>
   <div class="body">
     <h2># Обо мне</h2>
-    <p>Привет! Я <strong>blin4k</strong>. Увлекаюсь программированием и созданием собственных проектов. Здесь собрана основная информация о моих навыках и работах: простые сайты, калькулятор и тест.</p>
+    <p>Привет! Я <strong>blin4k</strong>. Увлекаюсь программированием и созданием собственных проектов.</p>
 
     <h2># Что я умею</h2>
     <ul class="chips"><li>Python</li><li>Flask</li><li>HTML &amp; CSS</li><li>JavaScript</li><li>Git</li></ul>
 
-    <h2># Портфолио</h2>
-    <div class="card">
-      <header><span>Калькулятор</span><span class="tag">JavaScript</span></header>
-      <p>Простой калькулятор для быстрых вычислений. Попробуй его прямо здесь.</p>
-      <div class="calc">
-        <div class="lbl">Тест</div>
-        <output id="scr" aria-live="polite">0</output>
-        <div class="keys" id="keys">
-          <button data-k="C" class="op">C</button><button data-k="±" class="op">±</button><button data-k="%" class="op">%</button><button data-k="/" class="op">÷</button>
-          <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button><button data-k="*" class="op">×</button>
-          <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button><button data-k="-" class="op">−</button>
-          <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button><button data-k="+" class="op">+</button>
-          <button data-k="0">0</button><button data-k=".">.</button><button data-k="=" class="op" style="grid-column:span 2">=</button>
-        </div>
-      </div>
-    </div>
+    <img class="pix" src="cat.jpg" alt="Кот с поднятым большим пальцем" width="300" height="295">
 
     <h2># Связь</h2>
     <div class="chips"><a href="https://github.com/FGWWE" target="_blank" rel="noopener">GitHub</a><a href="https://t.me/BliN4ks" target="_blank" rel="noopener">Telegram</a></div>
@@ -97,30 +76,6 @@ document.getElementById('open').onclick=()=>{d.showModal();document.body.classLi
 document.getElementById('close').onclick=()=>d.close();
 d.addEventListener('close',()=>document.body.classList.remove('dim'));
 d.addEventListener('click',e=>{if(e.target===d)d.close()});
-
-// calculator
-(()=>{
-  const scr=document.getElementById('scr');
-  let cur='0',prev=null,op=null,fresh=false;
-  const calc=(a,o,b)=>o==='+'?a+b:o==='-'?a-b:o==='*'?a*b:b===0?NaN:a/b;
-  const fmt=n=>isFinite(n)?String(+n.toPrecision(12)):'Ошибка';
-  document.getElementById('keys').addEventListener('click',e=>{
-    const k=e.target.dataset.k;if(!k)return;
-    if(cur==='Ошибка'&&k!=='C')return;
-    if(/\d/.test(k)){cur=(fresh||cur==='0')?k:cur+k;fresh=false}
-    else if(k==='.'){if(fresh){cur='0.';fresh=false}else if(!cur.includes('.'))cur+='.'}
-    else if(k==='C'){cur='0';prev=null;op=null;fresh=false}
-    else if(k==='±'){cur=fmt(-parseFloat(cur))}
-    else if(k==='%'){cur=fmt(parseFloat(cur)/100)}
-    else if(k==='='){if(op!==null){cur=fmt(calc(prev,op,parseFloat(cur)));prev=null;op=null;fresh=true}}
-    else{
-      if(op!==null&&!fresh)cur=fmt(calc(prev,op,parseFloat(cur)));
-      prev=parseFloat(cur);op=k;fresh=true;
-      if(cur==='Ошибка'){prev=null;op=null}
-    }
-    scr.textContent=cur;
-  });
-})();
 
 // black hole + stars
 const bgc=document.getElementById('bg'),sky=document.getElementById('sky');
